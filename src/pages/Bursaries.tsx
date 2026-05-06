@@ -7,12 +7,12 @@ import { FUNDING_LISTINGS, ALL_FUNDING_TYPES, TYPE_COLORS, type FundingType } fr
 import type { User } from '../types';
 import { cn } from '../lib/utils';
 
-export default function Bursaries({ user, onOpenAuth }: { user: User | null; onOpenAuth: () => void }) {
+export default function Bursaries({ user, onOpenAuth }: { user: User | null; onOpenAuth: (redirectTo?: string) => void }) {
   const navigate = useNavigate();
 
   const handleApply = () => {
     if (user) navigate('/dashboard');
-    else onOpenAuth();
+    else onOpenAuth('/dashboard');
   };
   const [activeType, setActiveType] = useState<FundingType | 'All'>('All');
   const [activeFilter, setActiveFilter] = useState('All');

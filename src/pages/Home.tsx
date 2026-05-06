@@ -13,12 +13,12 @@ import {
 import type { User } from '../types';
 import { cn } from '../lib/utils';
 
-export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAuth: () => void }) {
+export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAuth: (redirectTo?: string) => void }) {
   const navigate = useNavigate();
 
   const handleApply = () => {
     if (user) navigate('/dashboard');
-    else onOpenAuth();
+    else onOpenAuth('/dashboard');
   };
   const [flowStep, setFlowStep]       = useState(0);
   const [pipelineStep, setPipelineStep] = useState(0);
@@ -258,9 +258,11 @@ export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAu
               <div ref={coin1Ref} className="absolute w-3.5 h-3.5 bg-blue rounded-full z-30 pointer-events-none opacity-0" style={{boxShadow:'0 0 0 3px rgba(26,107,255,0.2)'}} />
               <div ref={coin2Ref} className="absolute w-3.5 h-3.5 bg-blue rounded-full z-30 pointer-events-none opacity-0" style={{boxShadow:'0 0 0 3px rgba(26,107,255,0.2)'}} />
 
-              {/* Desktop */}
-              <div className="hidden lg:flex items-center min-h-[340px]">
-                <div ref={donorCardRef} className="w-[240px] flex-shrink-0 bg-black text-white p-6 relative z-10">
+              {/* Unified responsive layout — vertical on mobile, horizontal on desktop */}
+              <div className="flex flex-col lg:flex-row items-center lg:min-h-[340px]">
+
+                {/* Donor card */}
+                <div ref={donorCardRef} className="w-full lg:w-[240px] lg:flex-shrink-0 bg-black text-white p-6 relative z-10">
                   <div className="font-syne text-[10px] font-bold tracking-[0.2em] uppercase text-white/55 mb-4">— Donor</div>
                   <div className="font-syne text-lg font-semibold mb-1 tracking-[-0.01em]">Lerato M.</div>
                   <div className="text-sm text-white/65 mb-5">Recurring contributor, Cape Town</div>
@@ -268,11 +270,16 @@ export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAu
                   <div className="font-syne text-[12px] font-semibold uppercase tracking-[0.05em] text-white/65 mt-1.5">Monthly contribution</div>
                 </div>
 
-                <div className="flex-1 h-0.5 bg-[#e0e0dc] relative overflow-hidden z-0">
-                  <div className="absolute inset-0 bg-blue transition-[width] duration-1000 ease-in-out" style={{width: flowStep >= 1 ? '100%' : '0%'}} />
+                {/* Connector 1: vertical on mobile, horizontal on desktop */}
+                <div className="flex-shrink-0 w-0.5 h-12 lg:h-0.5 lg:w-auto lg:flex-1 bg-[#e0e0dc] relative overflow-hidden z-0">
+                  <div
+                    className="absolute top-0 left-0 bg-blue transition-[width,height] duration-1000 ease-in-out"
+                    style={{ width: flowStep >= 1 ? '100%' : '0%', height: flowStep >= 1 ? '100%' : '0%' }}
+                  />
                 </div>
 
-                <div className="flex flex-col items-center flex-shrink-0 z-10 px-2">
+                {/* Pool circle */}
+                <div className="flex flex-col items-center flex-shrink-0 z-10 py-6 lg:py-0 lg:px-2">
                   <div ref={poolCircleRef} className="relative w-[200px] h-[200px] rounded-full border-2 border-black bg-[#fafaf7] flex items-center justify-center overflow-hidden">
                     <div
                       className="absolute left-0 right-0 bottom-0 overflow-visible"
@@ -288,7 +295,7 @@ export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAu
                     <div className="relative z-10 text-center px-4">
                       <div className="font-syne text-[10px] font-bold tracking-[0.2em] uppercase text-grey-400 mb-2">Active pool</div>
                       <div
-                        className="font-syne text-[28px] font-bold tracking-[-0.02em] leading-none transition-all duration-300"
+                        className="font-syne text-[26px] font-bold tracking-[-0.02em] leading-none transition-all duration-300"
                         style={{ color: poolAmountFlash ? '#1a6bff' : '#111111', transform: poolAmountFlash ? 'scale(1.05)' : 'scale(1)' }}
                       >
                         {poolDisplay}
@@ -307,11 +314,16 @@ export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAu
                   </div>
                 </div>
 
-                <div className="flex-1 h-0.5 bg-[#e0e0dc] relative overflow-hidden z-0">
-                  <div className="absolute inset-0 bg-blue transition-[width] duration-1000 ease-in-out" style={{width: flowStep >= 3 ? '100%' : '0%'}} />
+                {/* Connector 2 */}
+                <div className="flex-shrink-0 w-0.5 h-12 lg:h-0.5 lg:w-auto lg:flex-1 bg-[#e0e0dc] relative overflow-hidden z-0">
+                  <div
+                    className="absolute top-0 left-0 bg-blue transition-[width,height] duration-1000 ease-in-out"
+                    style={{ width: flowStep >= 3 ? '100%' : '0%', height: flowStep >= 3 ? '100%' : '0%' }}
+                  />
                 </div>
 
-                <div ref={schoolCardRef} className="w-[240px] flex-shrink-0 bg-blue text-white p-6 relative z-10">
+                {/* Institution card */}
+                <div ref={schoolCardRef} className="w-full lg:w-[240px] lg:flex-shrink-0 bg-blue text-white p-6 relative z-10">
                   <div className="font-syne text-[10px] font-bold tracking-[0.2em] uppercase text-white/70 mb-4">— Institution</div>
                   <div className="font-syne text-lg font-semibold mb-1 tracking-[-0.01em]">VUT</div>
                   <div className="text-sm text-white/85 mb-5">Vaal University of Technology</div>
@@ -323,45 +335,7 @@ export default function Home({ user, onOpenAuth }: { user: User | null; onOpenAu
                   </div>
                   <div className="font-syne text-[12px] font-semibold uppercase tracking-[0.05em] text-white/80 mt-1.5">Tuition disbursed</div>
                 </div>
-              </div>
 
-              {/* Mobile */}
-              <div className="lg:hidden flex flex-col gap-6 items-center py-4">
-                <div className="w-full bg-black text-white p-6">
-                  <div className="font-syne text-[10px] font-bold tracking-[0.2em] uppercase text-white/55 mb-3">— Donor</div>
-                  <div className="font-syne text-lg font-semibold">Lerato M.</div>
-                  <div className="text-sm text-white/65 mb-4">Recurring contributor, Cape Town</div>
-                  <div className="font-syne text-[32px] font-bold leading-none">R 1,200</div>
-                  <div className="font-syne text-[11px] font-semibold uppercase tracking-[0.05em] text-white/65 mt-1.5">Monthly contribution</div>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="relative w-[160px] h-[160px] rounded-full border-2 border-black bg-[#fafaf7] flex items-center justify-center overflow-hidden">
-                    <div className="absolute left-0 right-0 bottom-0 overflow-visible" style={{ height: poolWaterHeight, transition: 'height 1.2s cubic-bezier(0.4,0,0.2,1)' }}>
-                      <svg viewBox="0 0 200 60" preserveAspectRatio="none" className="absolute left-0 right-0 bottom-0 w-full overflow-visible" style={{height:'100%'}}>
-                        <path fill="#1a6bff" fillOpacity="0.18" d="M 0 32 L 200 32 L 200 60 L 0 60 Z" />
-                        <path fill="#1a6bff" fillOpacity="0.28" d="M 0 27 L 200 27 L 200 60 L 0 60 Z" />
-                      </svg>
-                    </div>
-                    <div className="relative z-10 text-center px-3">
-                      <div className="font-syne text-[9px] font-bold tracking-[0.2em] uppercase text-grey-400 mb-1">Active pool</div>
-                      <div className="font-syne text-xl font-bold">{poolDisplay}</div>
-                      <div className="font-syne text-[9px] font-semibold uppercase tracking-[0.05em] text-grey-500 mt-1">Held in escrow</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 px-3 py-2 border border-grey-200 bg-[#fafaf7]">
-                    <span className={cn("w-2 h-2 rounded-full flex-shrink-0", flowStep === 0 ? "bg-[#9a9a96]" : flowStep >= 4 ? "bg-green" : "bg-blue animate-pulse")} />
-                    <span className="font-syne text-[10px] font-semibold tracking-[0.05em] text-black">
-                      {flowStep === 0 ? 'Waiting' : flowStep === 1 ? 'Receiving' : flowStep === 2 ? 'Matching' : flowStep === 3 ? 'Releasing' : 'Disbursed'}
-                    </span>
-                  </div>
-                </div>
-                <div className="w-full bg-blue text-white p-6">
-                  <div className="font-syne text-[10px] font-bold tracking-[0.2em] uppercase text-white/70 mb-3">— Institution</div>
-                  <div className="font-syne text-lg font-semibold">VUT</div>
-                  <div className="text-sm text-white/85 mb-4">Vaal University of Technology</div>
-                  <div className="font-syne text-[32px] font-bold leading-none transition-opacity duration-500" style={{opacity: flowStep >= 4 ? 1 : 0.3}}>{schoolDisplay}</div>
-                  <div className="font-syne text-[11px] font-semibold uppercase tracking-[0.05em] text-white/80 mt-1.5">Tuition disbursed</div>
-                </div>
               </div>
             </div>
           </div>

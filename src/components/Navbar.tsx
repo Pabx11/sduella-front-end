@@ -28,7 +28,7 @@ export default function Navbar({ user, onOpenAuth }: NavbarProps) {
     <nav className="fixed inset-x-0 top-0 h-[62px] bg-white border-b border-grey-200 z-[300] flex items-center justify-between px-6 md:px-12">
       <div className="flex items-center gap-8">
         <a href="/" className="flex items-center cursor-pointer">
-          <img className="h-50 w-100" src="/public/pictures/Sduella Modern Logo (1).svg" alt="SDUELLA Logo" />
+          <img className="h-50 w-100" src="/pictures/Sduella Modern Logo (1).svg" alt="SDUELLA Logo" />
         </a>
         <ul className="hidden lg:flex items-center gap-5 list-none">
           {navLinks.map((link) => (

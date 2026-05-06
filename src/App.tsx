@@ -309,7 +309,7 @@ export default function App() {
             <Route path="/" element={<Home user={user} onOpenAuth={openAuth} />} />
             <Route path="/bursaries" element={<Bursaries user={user} onOpenAuth={openAuth} />} />
             <Route path="/about" element={<About />} />
-            <Route path="/donate" element={<Donate user={user} onOpenAuth={openAuth} onDonate={handleDonate} onUpdateUser={handleUpdateUser} />} />
+            <Route path="/donate" element={<Donate user={user} onDonate={handleDonate} onUpdateUser={handleUpdateUser} />} />
             <Route path="/apply" element={<Apply user={user} onOpenAuth={() => openAuth('/apply')} onUpdateUser={handleUpdateUser} />} />
             <Route path="/dashboard" element={<Dashboard user={user} onLogout={() => setUser(null)} onUpdateUser={handleUpdateUser} />} />
             <Route path="/newsletter" element={<Newsletter />} />

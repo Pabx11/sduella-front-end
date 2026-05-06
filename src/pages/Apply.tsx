@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 
 export default function Apply({ user, onOpenAuth, onUpdateUser }: {
   user: User | null;
-  onOpenAuth: () => void;
+  onOpenAuth: (redirectTo?: string) => void;
   onUpdateUser: (user: User) => void;
 }) {
   const [step, setStep] = useState(1);
@@ -73,7 +73,7 @@ export default function Apply({ user, onOpenAuth, onUpdateUser }: {
         <ShieldCheck className="w-16 h-16 text-grey-200 mb-6" />
         <h1 className="text-3xl font-extrabold mb-4">Authentication Required</h1>
         <p className="text-grey-600 max-w-md mb-8">You must be logged in as a student to apply for funding.</p>
-        <button onClick={onOpenAuth} className="px-8 py-4 bg-black text-white font-syne font-bold text-sm tracking-wide rounded-sm">Log In / Register</button>
+        <button onClick={() => onOpenAuth()} className="px-8 py-4 bg-black text-white font-syne font-bold text-sm tracking-wide rounded-sm">Log In / Register</button>
       </div>
     );
   }

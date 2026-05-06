@@ -7,6 +7,8 @@ export const MOCK_DATA = {
     'thandi@email.com': {
       name: 'Thandi Mokoena',
       role: 'donor' as Role,
+      phone: '+27 82 345 6789',
+      address: '14 Protea Street, Soweto, Johannesburg, 1804',
       totalDonated: 15000,
       donations: [
         { date: '2025-10-12', amount: 5000, students: 3, status: 'Disbursed' },
@@ -17,6 +19,8 @@ export const MOCK_DATA = {
     'siya@email.com': {
       name: 'Siyanda Dlamini',
       role: 'donor' as Role,
+      phone: '+27 71 890 1234',
+      address: '8 Berea Road, Durban North, KwaZulu-Natal, 4051',
       totalDonated: 8500,
       donations: [
         { date: '2025-11-05', amount: 3500, students: 2, status: 'Disbursed' },
@@ -28,6 +32,9 @@ export const MOCK_DATA = {
     'mpho@university.edu': {
       name: 'Mpho Sithole',
       role: 'student' as Role,
+      phone: '+27 63 012 3456',
+      idNumber: '0001015800082',
+      address: '22 Jan Smuts Avenue, Braamfontein, Johannesburg, 2001',
       institution: 'Metropolitan University',
       year: '3rd Year',
       applications: [
@@ -38,6 +45,9 @@ export const MOCK_DATA = {
     'naledi@institute.edu': {
       name: 'Naledi Khumalo',
       role: 'student' as Role,
+      phone: '+27 74 567 8901',
+      idNumber: '0205100800087',
+      address: '3 Adderley Street, Cape Town City Centre, Western Cape, 8001',
       institution: 'Globala Tech Institute',
       year: '2nd Year',
       applications: [],

@@ -1,11 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { CheckCircle2 } from 'lucide-react';
-import type { User } from '../types';
-import { cn } from '../lib/utils';
-
-export default function Donate({ onOpenAuth, user, onDonate, onUpdateUser }: {
-  onOpenAuth: () => void;
+ 
+export default function Donate({ user, onDonate, onUpdateUser }: {
   user: User | null;
   onDonate: (amount: number) => void;
   onUpdateUser: (user: User) => void;
