@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "components/button.html" import cta %}
+
+{% block content %}
+<tr>
+  <td style="padding:36px 40px 8px;">
+    <p style="margin:0 0 10px;color:#9a9a96;font-size:9px;font-weight:700;
+      letter-spacing:2.5px;text-transform:uppercase;">— Account</p>
+    <p style="margin:0;color:#111111;font-size:32px;font-weight:900;
+      line-height:1.15;letter-spacing:-0.8px;">
+      Your profile<br>was updated.
+    </p>
+  </td>
+</tr>
+
+<tr>
+  <td style="padding:24px 40px 32px;">
+    <p style="margin:0 0 20px;color:#555550;font-size:13px;line-height:1.75;">
+      The following details on your Sduella account were changed on {{ updated_at }}:
+    </p>
+
+    {% for field in changed_fields %}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;">
+      <tr>
+        <td style="width:2px;background-color:#9a9a96;padding:0;" width="2">&nbsp;</td>
+        <td style="padding:0 0 0 16px;color:#555550;font-size:13px;line-height:1.75;">{{ field }}</td>
+      </tr>
+    </table>
+    {% endfor %}
+
+    <p style="margin:20px 0 0;color:#9a9a96;font-size:12px;line-height:1.65;">
+      If this was not you, contact us immediately at
+      <a href="mailto:support@sduella.com" style="color:#1a6bff;text-decoration:none;">support@sduella.com</a>
+    </p>
+  </td>
+</tr>
+
+{{ cta('Review My Account', account_url, '#111111') }}
+{% endblock %}

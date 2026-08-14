@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "components/button.html" import cta %}
+
+{% block content %}
+<tr>
+  <td style="padding:36px 40px 8px;">
+    <p style="margin:0 0 10px;color:#9a9a96;font-size:9px;font-weight:700;
+      letter-spacing:2.5px;text-transform:uppercase;">— Announcement</p>
+    <p style="margin:0;color:#111111;font-size:32px;font-weight:900;
+      line-height:1.15;letter-spacing:-0.8px;">{{ heading }}</p>
+  </td>
+</tr>
+
+<tr>
+  <td style="padding:24px 40px 32px;">
+    <p style="margin:0;color:#555550;font-size:13px;line-height:1.75;">{{ body }}</p>
+  </td>
+</tr>
+
+{% if cta_url %}
+{{ cta(cta_label | default('Learn More'), cta_url, '#111111') }}
+{% endif %}
+{% endblock %}

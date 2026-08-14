@@ -1,0 +1,55 @@
+{# ── Reusable macros ─────────────────────────────────────────────────────────
+   Import in any template:
+     {% from "components/button.html" import cta, bullet, section_label, divider %}
+#}
+
+{# Full-width CTA button row. Outputs a <tr> — use at the top level of {% block content %}. #}
+{% macro cta(label, url, color='#1a6bff') %}
+<tr>
+  <td style="padding:0 40px 36px;text-align:center;">
+    <a href="{{ url }}"
+      style="display:inline-block;padding:14px 36px;background-color:{{ color }};
+        color:#ffffff;font-size:10px;font-weight:700;letter-spacing:2px;
+        text-transform:uppercase;text-decoration:none;">
+      {{ label }} &rarr;
+    </a>
+  </td>
+</tr>
+{% endmacro %}
+
+{# Blue-bar bullet. Outputs a standalone <table> — use inside a <td>. #}
+{% macro bullet(text) %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+  <tr>
+    <td style="width:2px;background-color:#1a6bff;padding:0;" width="2">&nbsp;</td>
+    <td style="padding:0 0 0 16px;color:#555550;font-size:13px;line-height:1.75;">{{ text }}</td>
+  </tr>
+</table>
+{% endmacro %}
+
+{# Section label prefix. Outputs a <p> — use inside a <td>. #}
+{% macro section_label(text, color='#9a9a96') %}
+<p style="margin:0 0 18px;color:{{ color }};font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;">— {{ text }}</p>
+{% endmacro %}
+
+{# Solid divider row. Outputs a <tr>. #}
+{% macro divider() %}
+<tr>
+  <td style="padding:0 40px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr><td style="border-top:1px solid #ececea;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td>
+</tr>
+{% endmacro %}
+
+{# Key-value detail row with dashed divider. Outputs two <tr>s — use inside a detail <table>. #}
+{% macro detail_row(label, value, value_color='#111111', mono=false) %}
+<tr><td colspan="2" style="border-top:1px dashed #e0e0dc;font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr>
+  <td style="padding:9px 0;color:#9a9a96;font-size:12px;">{{ label }}</td>
+  <td style="padding:9px 0;color:{{ value_color }};font-size:12px;font-weight:700;text-align:right;
+    {% if mono %}font-family:monospace,monospace;{% endif %}">{{ value }}</td>
+</tr>
+{% endmacro %}

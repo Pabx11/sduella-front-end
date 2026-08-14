@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% from "components/button.html" import cta, bullet, detail_row %}
+
+{% block content %}
+<tr>
+  <td style="padding:36px 40px 8px;">
+    <p style="margin:0 0 10px;color:#1a6bff;font-size:9px;font-weight:700;
+      letter-spacing:2.5px;text-transform:uppercase;">— Your Contribution</p>
+    <p style="margin:0;color:#111111;font-size:32px;font-weight:900;
+      line-height:1.15;letter-spacing:-0.8px;">
+      Thank you,<br>{{ first_name }}.
+    </p>
+  </td>
+</tr>
+
+<!-- Amount block -->
+<tr>
+  <td style="padding:28px 40px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="background-color:#111111;border-left:4px solid #1a6bff;padding:22px 28px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td>
+                <p style="margin:0;color:rgba(255,255,255,0.4);font-size:9px;font-weight:700;
+                  letter-spacing:2px;text-transform:uppercase;">— Amount</p>
+                <p style="margin:8px 0 0;color:#ffffff;font-size:34px;font-weight:900;
+                  line-height:1;letter-spacing:-1px;">R {{ amount }}</p>
+              </td>
+              <td align="right" valign="middle">
+                <span style="display:inline-block;padding:5px 14px;background-color:#1e1e1e;
+                  color:#1a6bff;font-size:9px;font-weight:700;
+                  letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">
+                  {{ status }}
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+<!-- What happens now -->
+<tr>
+  <td style="padding:0 40px 32px;">
+    <p style="margin:0 0 18px;color:#9a9a96;font-size:9px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;">— What happens now</p>
+    {{ bullet('Your contribution enters a managed pool disbursed exclusively to reviewed, approved student applications.') }}
+    {{ bullet('Funds go directly to institutions — no intermediaries, no campaigns, no popularity contests.') }}
+    {{ bullet('A quarterly impact report will be sent to your email address.') }}
+  </td>
+</tr>
+
+<!-- Divider -->
+<tr>
+  <td style="padding:0 40px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr><td style="border-top:1px solid #ececea;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td>
+</tr>
+
+<!-- Donor details -->
+<tr>
+  <td style="padding:24px 40px 0;">
+    <p style="margin:0;color:#9a9a96;font-size:9px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;">— Donor Details</p>
+  </td>
+</tr>
+<tr>
+  <td style="padding:0 40px 8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      {{ detail_row('Full Name', donor_name) }}
+      {{ detail_row('Email', donor_email) }}
+      {% if is_company %}
+      {{ detail_row('Company', company_name) }}
+      {{ detail_row('Reg. Number', registration_number, mono=true) }}
+      {% endif %}
+      <tr><td colspan="2" style="border-top:1px dashed #e0e0dc;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td>
+</tr>
+
+<!-- Donation details -->
+<tr>
+  <td style="padding:16px 40px 0;border-top:1px solid #ececea;">
+    <p style="margin:0;color:#9a9a96;font-size:9px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;">— Donation Details</p>
+  </td>
+</tr>
+<tr>
+  <td style="padding:0 40px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      {{ detail_row('Date', date) }}
+      {{ detail_row('Amount', 'R ' ~ amount) }}
+      {{ detail_row('Fund Status', status) }}
+      {{ detail_row('Reference', reference, value_color='#1a6bff', mono=true) }}
+      <tr><td colspan="2" style="border-top:1px dashed #e0e0dc;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td>
+</tr>
+
+{{ cta('Invite Others to Donate', 'https://www.sduella.com/donate') }}
+{% endblock %}
+
+{% block outer_note %}
+You received this because you made a donation at
+<a href="https://www.sduella.com" style="color:#9a9a96;">www.sduella.com</a>
+{% endblock %}

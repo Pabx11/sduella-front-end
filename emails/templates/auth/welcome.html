@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "components/button.html" import cta, bullet, divider %}
+
+{% block content %}
+<tr>
+  <td style="padding:36px 40px 8px;">
+    <p style="margin:0 0 10px;color:#1a6bff;font-size:9px;font-weight:700;
+      letter-spacing:2.5px;text-transform:uppercase;">— Welcome</p>
+    <p style="margin:0;color:#111111;font-size:32px;font-weight:900;
+      line-height:1.15;letter-spacing:-0.8px;">
+      Welcome,<br>{{ first_name }}.
+    </p>
+  </td>
+</tr>
+
+<tr>
+  <td style="padding:24px 40px 32px;">
+    <p style="margin:0 0 24px;color:#555550;font-size:13px;line-height:1.75;">
+      Your account has been created. You can now apply for funding or contribute to
+      the Sduella Community Education Fund.
+    </p>
+    {{ bullet('Every application is reviewed by a real committee — merit and need, not popularity.') }}
+    {{ bullet('Funds go directly to institutions. No intermediaries, no campaigns.') }}
+    {{ bullet('Your dashboard tracks your history and impact in one place.') }}
+  </td>
+</tr>
+
+{{ cta('Go to Dashboard', dashboard_url) }}
+{% endblock %}
+
+{% block outer_note %}
+You received this because you created an account at
+<a href="https://www.sduella.com" style="color:#9a9a96;">www.sduella.com</a>
+{% endblock %}
