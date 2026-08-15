@@ -37,8 +37,8 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
 
   const tabs = [
     { id: 'overview',  label: 'Overview',   icon: <LayoutDashboard size={16} /> },
-    { id: 'items',     label: user.role === 'donor' ? 'Donations' : 'Applications', icon: user.role === 'donor' ? <CreditCard size={16} /> : <FileText size={16} /> },
-    { id: 'history',   label: 'History',    icon: <History size={16} /> },
+    // { id: 'items',     label: user.role === 'donor' ? 'Donations' : 'Applications', icon: user.role === 'donor' ? <CreditCard size={16} /> : <FileText size={16} /> },
+    // { id: 'history',   label: 'History',    icon: <History size={16} /> },
     { id: 'settings',  label: 'Settings',   icon: <SettingsIcon size={16} /> },
   ];
 
@@ -113,9 +113,9 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                       <h1 className="text-3xl font-extrabold mb-2">Overview</h1>
                       <p className="text-grey-500 text-sm">Welcome back, {user.name.split(' ')[0]}.</p>
                     </div>
-                    {user.role === 'student' && (
+                    {/* {user.role === 'student' && (
                       <a href="/apply" className="px-6 py-3 bg-black text-white font-syne font-bold text-[13px] rounded-sm shadow-lg shadow-black/10 hover:translate-y-[-2px] transition-all text-center">New Application</a>
-                    )}
+                    )} */}
                   </div>
                   {!user.emailVerified && (
                     <div className="mb-6 border border-amber-200 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -176,10 +176,10 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                       </>
                     ) : (
                       <>
-                        <div className="bg-white p-8 rounded-sm border border-grey-200">
+                        {/* <div className="bg-white p-8 rounded-sm border border-grey-200">
                           <div className="text-[10px] font-bold tracking-widest uppercase text-grey-400 mb-2">Applications</div>
                           <div className="text-3xl font-syne font-extrabold">{(user.applications ?? []).length || '--'}</div>
-                        </div>
+                        </div> */}
                         <div className="bg-white p-8 rounded-sm border border-grey-200">
                           <div className="text-[10px] font-bold tracking-widest uppercase text-grey-400 mb-2">Status</div>
                           <div className="text-2xl font-syne font-extrabold text-blue">
