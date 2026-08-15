@@ -7,10 +7,10 @@ export default function Newsletter() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <div className="pt-[62px] min-h-[calc(100vh-62px)] flex items-center justify-center bg-off-white p-6">
-      <div className="max-w-xl w-full bg-white p-12 md:p-20 border border-grey-200 rounded-sm text-center">
+    <div className="pt-[62px] min-h-[calc(100dvh-62px)] flex items-center justify-center bg-off-white p-4 sm:p-6">
+      <div className="max-w-xl w-full bg-white p-6 sm:p-10 md:p-20 border border-grey-200 rounded-sm text-center">
         <Mail className="w-12 h-12 text-blue mx-auto mb-8" />
-        <h1 className="text-4xl font-extrabold mb-4">Stay informed.</h1>
+        <h1 className="text-3xl sm:text-4xl font-extrabold mb-4">Stay informed.</h1>
         <p className="text-grey-600 mb-10 leading-relaxed">
           Get quarterly impact reports, student success stories, and updates on the Sduella fund pool directly in your inbox.
         </p>

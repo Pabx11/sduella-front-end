@@ -21,11 +21,11 @@ export default function Transparency() {
       </section>
 
       {/* Fund Allocation */}
-      <section className="py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           <div>
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Fund Allocation</span>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-8">Where every rand goes.</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8">Where every rand goes.</h2>
             <p className="text-grey-600 leading-relaxed mb-10">
               85 cents of every rand donated goes directly to student disbursements. The remaining 15 cents cover the operational costs required to maintain fund integrity.
             </p>
@@ -67,11 +67,11 @@ export default function Transparency() {
       </section>
 
       {/* Committee */}
-      <section className="py-24 px-6 md:px-12 bg-off-white border-y border-grey-200">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-off-white border-y border-grey-200">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Governance</span>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-4">The Committee</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">The Committee</h2>
             <p className="text-grey-600 max-w-2xl">
               Our independent committee reviews all applications and oversees disbursements. Members serve voluntarily and declare any conflicts of interest.
             </p>
@@ -84,7 +84,7 @@ export default function Transparency() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07 }}
-                className="bg-white p-8 rounded-sm border border-grey-100"
+                className="bg-white p-5 sm:p-8 rounded-sm border border-grey-100"
               >
                 <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-extrabold font-syne text-sm mb-5">
                   {m.name
@@ -104,16 +104,17 @@ export default function Transparency() {
       </section>
 
       {/* Audits */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Audits</span>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-4">Independent Audits</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Independent Audits</h2>
             <p className="text-grey-600">
               Quarterly audits are conducted by registered independent firms. All reports are available to donors on request.
             </p>
           </div>
-          <div className="bg-white border border-grey-200 rounded-sm overflow-hidden max-w-4xl">
+          <div className="bg-white border border-grey-200 rounded-sm overflow-x-auto max-w-4xl">
+            <div className="min-w-[640px]">
             <div className="grid grid-cols-4 p-5 border-b border-grey-100 bg-off-white">
               {['Period', 'Auditor', 'Status', 'Outcome'].map(h => (
                 <div key={h} className="text-[10px] font-bold tracking-widest uppercase text-grey-400">{h}</div>
@@ -131,6 +132,7 @@ export default function Transparency() {
                 <div className="text-xs text-grey-500">{a.outcome}</div>
               </div>
             ))}
+            </div>
           </div>
           <p className="text-xs text-grey-400 mt-6">
             Full audit reports available on request: audit@sduella.org
@@ -139,7 +141,7 @@ export default function Transparency() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 md:px-12 bg-black text-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-12 bg-black text-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold mb-4">Questions about our governance?</h2>
           <p className="text-white/60 mb-8">

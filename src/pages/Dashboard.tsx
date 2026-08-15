@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutDashboard, FileText, CreditCard, History,
@@ -8,18 +10,30 @@ import {
 import type { User } from '../types';
 import { cn } from '../lib/utils';
 import { printDonationReceipt, printDonationStatement } from '../lib/pdf';
+import { requestEmailVerification, updateConsents } from '../lib/authApi';
 
 export default function Dashboard({ user, onLogout, onUpdateUser }: {
   user: User | null;
   onLogout: () => void;
   onUpdateUser?: (user: User) => void;
 }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDonation, setSelectedDonation] = useState<{ item: any; index: number } | null>(null);
   const [donorType, setDonorType] = useState<'individual' | 'company'>(user?.donorType ?? 'individual');
+  const [profileDraft, setProfileDraft] = useState({
+    name: user?.name ?? '', countryCode: user?.countryCode ?? '', city: user?.city ?? '', institution: user?.institution ?? '',
+  });
+  const [alertConsent, setAlertConsent] = useState(Boolean(user?.consents?.opportunity_email));
+  const [marketingConsent, setMarketingConsent] = useState(Boolean(user?.consents?.marketing));
+  const [preferenceMessage, setPreferenceMessage] = useState('');
 
-  if (!user) return <Navigate to="/" />;
+  useEffect(() => {
+    if (!user) router.replace('/');
+  }, [router, user]);
+
+  if (!user) return <div className="min-h-screen bg-off-white" aria-live="polite" />;
 
   const tabs = [
     { id: 'overview',  label: 'Overview',   icon: <LayoutDashboard size={16} /> },
@@ -31,7 +45,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
   return (
     <div className="pt-[62px] min-h-screen bg-off-white">
       {/* Mobile top bar */}
-      <div className="lg:hidden bg-white border-b border-grey-200 px-6 py-4 flex items-center justify-between sticky top-[62px] z-40">
+      <div className="lg:hidden bg-white border-b border-grey-200 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-[62px] z-40">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-syne text-xs font-bold">
             {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -81,7 +95,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
         )}
 
         {/* Main */}
-        <main className="p-6 md:p-12">
+        <main className="p-4 sm:p-6 md:p-12 min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -103,10 +117,16 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                       <a href="/apply" className="px-6 py-3 bg-black text-white font-syne font-bold text-[13px] rounded-sm shadow-lg shadow-black/10 hover:translate-y-[-2px] transition-all text-center">New Application</a>
                     )}
                   </div>
+                  {!user.emailVerified && (
+                    <div className="mb-6 border border-amber-200 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <p className="text-sm text-amber-900">Verify your email before matching-opportunity alerts can be sent.</p>
+                      <button onClick={() => requestEmailVerification().catch(() => undefined)} className="text-xs font-bold uppercase tracking-wider text-amber-900 underline">Send verification email</button>
+                    </div>
+                  )}
 
                   {/* Donor profile card */}
                   {user.role === 'donor' && (
-                    <div className="bg-white border border-grey-200 rounded-sm p-8 mb-6 flex flex-col sm:flex-row gap-6 items-start">
+                    <div className="bg-white border border-grey-200 rounded-sm p-5 sm:p-8 mb-6 flex flex-col sm:flex-row gap-6 items-start">
                       <div className="w-20 h-20 rounded-full bg-black text-white flex items-center justify-center font-syne text-2xl font-bold flex-shrink-0">
                         {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </div>
@@ -121,7 +141,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
 
                   {/* Student profile card */}
                   {user.role === 'student' && (
-                    <div className="bg-white border border-grey-200 rounded-sm p-8 mb-6 flex flex-col sm:flex-row gap-6 items-start">
+                    <div className="bg-white border border-grey-200 rounded-sm p-5 sm:p-8 mb-6 flex flex-col sm:flex-row gap-6 items-start">
                       <div className="w-20 h-20 rounded-full bg-black text-white flex items-center justify-center font-syne text-2xl font-bold flex-shrink-0">
                         {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </div>
@@ -186,8 +206,8 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                     </div>
                     <div className="divide-y divide-grey-100">
                       {(user.role === 'donor' ? user.donations : user.applications)?.slice(0, 3).map((item: any, i: number) => (
-                        <div key={i} className="p-6 flex items-center justify-between">
-                          <div className="flex items-center gap-4">
+                        <div key={i} className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div className="flex items-center gap-4 min-w-0">
                             <div className={cn("w-10 h-10 rounded-sm flex items-center justify-center", item.status === 'Approved' || item.status === 'Disbursed' ? "bg-green/10 text-green" : "bg-blue/10 text-blue")}>
                               {user.role === 'donor' ? <CreditCard size={18} /> : <FileText size={18} />}
                             </div>
@@ -196,7 +216,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                               <div className="text-[11px] text-grey-400">{item.date}</div>
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="text-left sm:text-right">
                             <div className="font-bold text-sm">R {item.amount.toLocaleString()}</div>
                             <div className={cn("text-[10px] font-bold uppercase tracking-widest", item.status === 'Approved' || item.status === 'Disbursed' ? "text-green" : "text-blue")}>{item.status}</div>
                           </div>
@@ -228,7 +248,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                     )}
                   </div>
                   <div className="bg-white border border-grey-200 rounded-sm overflow-hidden">
-                    <div className="p-6 border-b border-grey-200">
+                    <div className="hidden sm:block p-6 border-b border-grey-200">
                       <div className={cn("grid text-[10px] font-bold tracking-widests uppercase text-grey-400", user.role === 'donor' ? "grid-cols-[1fr_1fr_auto_32px]" : "grid-cols-4")}>
                         <div className={user.role !== 'donor' ? "col-span-2" : ""}>Description</div>
                         <div>Amount</div>
@@ -242,13 +262,13 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                           key={i}
                           onClick={() => user.role === 'donor' && setSelectedDonation({ item, index: i })}
                           className={cn(
-                            "p-6 grid items-center gap-4",
+                            "p-4 sm:p-6 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4",
                             user.role === 'donor'
-                              ? "grid-cols-[1fr_1fr_auto_32px] cursor-pointer hover:bg-grey-50 transition-colors"
-                              : "grid-cols-4"
+                              ? "sm:grid-cols-[1fr_1fr_auto_32px] cursor-pointer hover:bg-grey-50 transition-colors"
+                              : "sm:grid-cols-4"
                           )}
                         >
-                          <div className={user.role !== 'donor' ? "col-span-2" : ""}>
+                          <div className={user.role !== 'donor' ? "col-span-2" : "col-span-2 sm:col-span-1"}>
                             <div className="font-bold text-sm">{item.category || 'Donation'}</div>
                             <div className="text-[11px] text-grey-400">{item.date}</div>
                           </div>
@@ -258,7 +278,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                               {item.status}
                             </span>
                           </div>
-                          {user.role === 'donor' && <ChevronRight size={16} className="text-grey-400 justify-self-end" />}
+                          {user.role === 'donor' && <ChevronRight size={16} className="hidden sm:block text-grey-400 justify-self-end" />}
                         </div>
                       ))}
                     </div>
@@ -275,8 +295,8 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                   </div>
                   <div className="space-y-4">
                     {(user.role === 'donor' ? user.donations : user.applications)?.map((item: any, i: number) => (
-                      <div key={i} className="bg-white p-6 rounded-sm border border-grey-200 flex items-center justify-between">
-                        <div className="flex items-center gap-6">
+                      <div key={i} className="bg-white p-4 sm:p-6 rounded-sm border border-grey-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-4 sm:gap-6 min-w-0">
                           <div className="text-center min-w-[60px]">
                             <div className="text-xs font-bold text-grey-400 uppercase tracking-widests">{item.date.split('-')[0]}</div>
                             <div className="text-xl font-extrabold">{item.date.split('-')[2]}</div>
@@ -287,7 +307,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                             <div className="text-[11px] text-grey-400">Ref: SD-{1000 + i}</div>
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div className="text-left sm:text-right">
                           <div className="font-syne font-bold text-sm">R {item.amount.toLocaleString()}</div>
                           <div className="text-[10px] font-bold text-grey-400 uppercase tracking-widests mt-1">Processed</div>
                         </div>
@@ -307,62 +327,46 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                   <div className="max-w-2xl space-y-8">
 
                     {/* Profile */}
-                    <div className="bg-white p-8 rounded-sm border border-grey-200">
+                    <div className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200">
                       <h3 className="text-lg font-extrabold mb-6">Profile Information</h3>
                       <div className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Full Name</label>
-                            <input type="text" defaultValue={user.name} className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
+                            <input type="text" value={profileDraft.name} onChange={event => setProfileDraft(value => ({ ...value, name: event.target.value }))} className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Email Address</label>
-                            <input type="email" defaultValue={user.email} className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
+                            <input type="email" value={user.email} disabled className="w-full px-4 py-2.5 border border-grey-200 bg-grey-50 text-grey-500 rounded-sm text-sm" />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Phone Number</label>
-                            <input type="tel" defaultValue={user.phone ?? ''} placeholder="e.g. +27 82 000 0000" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
+                            <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Country code</label>
+                            <input type="text" maxLength={2} value={profileDraft.countryCode} onChange={event => setProfileDraft(value => ({ ...value, countryCode: event.target.value.toUpperCase() }))} placeholder="e.g. ZA, FR, GH" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm uppercase" />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Gender</label>
-                            <select defaultValue={user.gender ?? ''} className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm bg-white appearance-none">
-                              <option value="">Select gender</option>
-                              <option value="male">Male</option>
-                              <option value="female">Female</option>
-                              <option value="non-binary">Non-binary</option>
-                              <option value="prefer-not-to-say">Prefer not to say</option>
-                            </select>
-                          </div>
-                          <div className="space-y-1.5 md:col-span-2">
-                            <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Home Address</label>
-                            <input type="text" defaultValue={user.address ?? ''} placeholder="Street, City, Province" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
+                            <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">City / region</label>
+                            <input type="text" value={profileDraft.city} onChange={event => setProfileDraft(value => ({ ...value, city: event.target.value }))} className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
                           </div>
                           {user.role === 'student' && (
                             <>
                               <div className="space-y-1.5">
                                 <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Institution</label>
-                                <input type="text" defaultValue={user.institution ?? ''} placeholder="University / TVET College" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
+                                <input type="text" value={profileDraft.institution} onChange={event => setProfileDraft(value => ({ ...value, institution: event.target.value }))} placeholder="University / college" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
                               </div>
                               <div className="space-y-1.5">
                                 <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">Year of Study</label>
                                 <input type="text" defaultValue={user.year ?? ''} placeholder="e.g. 3rd Year" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm" />
                               </div>
-                              <div className="space-y-1.5 md:col-span-2">
-                                <label className="text-[10px] font-bold tracking-widests uppercase text-grey-400">
-                                  SA ID Number <span className="normal-case tracking-normal font-normal text-grey-400">· encrypted</span>
-                                </label>
-                                <input type="text" defaultValue={user.idNumber ?? ''} placeholder="13-digit SA ID" className="w-full px-4 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm font-mono tracking-widests" />
-                              </div>
                             </>
                           )}
                         </div>
-                        <button className="px-6 py-2.5 bg-black text-white font-syne font-bold text-xs rounded-sm">Save Changes</button>
+                        <button onClick={() => onUpdateUser?.({ ...user, ...profileDraft })} className="px-6 py-2.5 bg-black text-white font-syne font-bold text-xs rounded-sm">Save Changes</button>
                       </div>
                     </div>
 
                     {/* Donor type + company */}
                     {user.role === 'donor' && (
-                      <div className="bg-white p-8 rounded-sm border border-grey-200">
+                      <div className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200">
                         <h3 className="text-lg font-extrabold mb-2">Donor Type</h3>
                         <p className="text-sm text-grey-500 mb-6">Specify whether you are donating as an individual or on behalf of a company. Company details are required for Section 18A tax receipts.</p>
                         <div className="grid grid-cols-2 gap-2 mb-6">
@@ -413,7 +417,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
 
                     {/* Student documents */}
                     {user.role === 'student' && (
-                      <div className="bg-white p-8 rounded-sm border border-grey-200">
+                      <div className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200">
                         <h3 className="text-lg font-extrabold mb-2">Documents</h3>
                         <p className="text-sm text-grey-500 mb-6">Upload or update your supporting documents. All files are reviewed privately.</p>
                         <div className="space-y-3">
@@ -424,7 +428,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                             { label: 'Student Card',              note: 'Current academic year' },
                             { label: 'Proof of Income / Affidavit', note: 'Household income or financial need documentation' },
                           ].map(doc => (
-                            <div key={doc.label} className="flex items-center justify-between p-4 border border-grey-200 rounded-sm">
+                            <div key={doc.label} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-grey-200 rounded-sm">
                               <div>
                                 <div className="text-sm font-bold">{doc.label}</div>
                                 <div className="text-[11px] text-grey-400 mt-0.5">{doc.note}</div>
@@ -438,20 +442,39 @@ export default function Dashboard({ user, onLogout, onUpdateUser }: {
                       </div>
                     )}
 
+                    <div className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200">
+                      <h3 className="text-lg font-extrabold mb-2">Email preferences</h3>
+                      <p className="text-sm text-grey-500 mb-6">Opportunity alerts and marketing are separate choices. Turning either off takes effect immediately.</p>
+                      <div className="space-y-4">
+                        <label className="flex items-start gap-3 p-4 border border-grey-100">
+                          <input type="checkbox" className="mt-1" checked={alertConsent} onChange={event => setAlertConsent(event.target.checked)} />
+                          <span><span className="block text-sm font-bold">Matching opportunity alerts</span><span className="block text-xs text-grey-500 mt-1">Email new jobs or funding that match your saved interests.</span></span>
+                        </label>
+                        <label className="flex items-start gap-3 p-4 border border-grey-100">
+                          <input type="checkbox" className="mt-1" checked={marketingConsent} onChange={event => setMarketingConsent(event.target.checked)} />
+                          <span><span className="block text-sm font-bold">Sduella news and marketing</span><span className="block text-xs text-grey-500 mt-1">Optional product news and campaigns.</span></span>
+                        </label>
+                        <button onClick={() => {
+                          setPreferenceMessage('Saving…');
+                          updateConsents(alertConsent, marketingConsent)
+                            .then(updated => { onUpdateUser?.(updated); setPreferenceMessage('Preferences saved.'); })
+                            .catch(() => setPreferenceMessage('Could not save preferences. Please try again.'));
+                        }} className="px-6 py-2.5 bg-black text-white font-syne font-bold text-xs rounded-sm">Save email preferences</button>
+                        {preferenceMessage && <p className="text-xs text-grey-500" role="status">{preferenceMessage}</p>}
+                      </div>
+                    </div>
+
                     {/* Security */}
-                    <div className="bg-white p-8 rounded-sm border border-grey-200">
+                    <div className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200">
                       <h3 className="text-lg font-extrabold mb-6">Security</h3>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 border border-grey-100 rounded-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-grey-100 rounded-sm">
                           <div>
-                            <div className="text-sm font-bold">Two-Factor Authentication</div>
-                            <div className="text-xs text-grey-500 mt-0.5">Add an extra layer of security.</div>
+                            <div className="text-sm font-bold">Two-factor authentication</div>
+                            <div className="text-xs text-grey-500 mt-0.5">Planned. Your password and active sessions are protected in the meantime.</div>
                           </div>
-                          <div className="w-10 h-5 bg-grey-200 rounded-full relative cursor-pointer">
-                            <div className="absolute top-1 left-1 w-3 h-3 bg-white rounded-full" />
-                          </div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-grey-400">Not enabled</span>
                         </div>
-                        <button className="text-xs font-bold text-blue uppercase tracking-widests">Change Password</button>
                       </div>
                     </div>
 

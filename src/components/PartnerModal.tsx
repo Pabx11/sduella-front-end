@@ -34,7 +34,7 @@ export default function PartnerModal() {
 
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
@@ -44,13 +44,13 @@ export default function PartnerModal() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative z-0 bg-white w-full max-w-lg rounded-sm shadow-2xl flex flex-col max-h-[90vh]"
+              className="relative z-0 bg-white w-full max-w-lg rounded-t-sm sm:rounded-sm shadow-2xl flex flex-col max-h-[96dvh] sm:max-h-[90vh]"
             >
-              <button onClick={() => setOpen(false)} className="absolute top-5 right-5 p-2 text-grey-400 hover:text-black hover:bg-grey-100 rounded-sm z-10">
+              <button onClick={() => setOpen(false)} className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 text-grey-400 hover:text-black hover:bg-grey-100 rounded-sm z-10">
                 <X size={16} />
               </button>
 
-              <div className="p-8 pb-4 shrink-0">
+              <div className="p-5 pr-14 pb-3 sm:p-8 sm:pb-4 shrink-0">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-blue block mb-3">Bursary Listing</span>
                 <h2 className="text-2xl font-extrabold font-syne">Partner with Sduella</h2>
                 <p className="text-sm text-grey-500 mt-2 leading-relaxed">
@@ -58,10 +58,10 @@ export default function PartnerModal() {
                 </p>
               </div>
 
-              <div className="overflow-y-auto flex-1 px-8 pb-8">
+              <div className="overflow-y-auto flex-1 px-5 pb-5 sm:px-8 sm:pb-8">
                 {!sent ? (
                   <form onSubmit={e => { e.preventDefault(); if (canSend) setSent(true); }} className="space-y-5 mt-4">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold tracking-widest uppercase text-grey-500">Organisation</label>
                         <input type="text" value={form.org} onChange={e => set('org', e.target.value)}

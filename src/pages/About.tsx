@@ -4,7 +4,7 @@ export default function About() {
   return (
     <div className="pt-[62px]">
       {/* Hero */}
-      <section className="bg-black text-white py-24 px-6 md:px-12 relative overflow-hidden">
+      {/* <section className="bg-black text-white py-24 px-6 md:px-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Our Mission</span>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 max-w-3xl leading-[0.9]">
@@ -15,13 +15,13 @@ export default function About() {
           </p>
         </div>
         <GraduationCap className="absolute -right-20 -bottom-20 w-96 h-96 text-white/5 rotate-12" />
-      </section>
+      </section> */}
 
       {/* The Problem */}
-      <section className="py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-8">The Student Funding Crisis</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8">The Student Funding Crisis</h2>
             <div className="space-y-6 text-grey-600 leading-relaxed">
               <p>
                 Across the globe, thousands of students fall into a funding gap — too rich for basic government bursaries, yet too poor to afford university fees. This gap often leads to high dropout rates, not because of academic failure, but financial exhaustion.
@@ -31,18 +31,18 @@ export default function About() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-off-white p-8 rounded-sm border border-grey-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
               <div className="text-4xl font-extrabold text-blue mb-2">40%</div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-grey-400">Dropout Rate</p>
               <p className="text-xs text-grey-600 mt-2">Average first-year dropout rate in many universities.</p>
             </div>
-            <div className="bg-off-white p-8 rounded-sm border border-grey-200">
+            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
               <div className="text-4xl font-extrabold text-black mb-2">R12B+</div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-grey-400">Student Debt</p>
               <p className="text-xs text-grey-600 mt-2">Cumulative student debt across institutions.</p>
             </div>
-            <div className="bg-off-white p-8 rounded-sm border border-grey-200 col-span-2">
+            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200 sm:col-span-2">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue/10 rounded-sm flex items-center justify-center">
                   <Target className="text-blue" size={24} />
@@ -55,17 +55,17 @@ export default function About() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Foundational Phase */}
-      <section className="py-24 px-6 md:px-12 bg-black text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-black text-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 border-1.5 border-blue/30 bg-blue/5 rounded-full mb-6 w-fit">
               <div className="w-2 h-2 rounded-full bg-blue animate-pulse" />
               <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue">Current Phase: Pool Building</span>
             </div>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-8">We are building the foundation.</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8">We are building the foundation.</h2>
             <p className="text-lg text-white/60 leading-relaxed mb-8">
               Sduella is currently in its foundational phase. We are not yet disbursing funds; instead, we are building a robust, community-backed pool to ensure that when we launch our first cycle, we can provide meaningful, life-changing support to every approved student.
             </p>
@@ -80,7 +80,7 @@ export default function About() {
               </div>
             </div>
           </div>
-          <div className="bg-white/5 p-12 rounded-sm border border-white/10">
+          <div className="bg-white/5 p-5 sm:p-8 lg:p-12 rounded-sm border border-white/10">
             <h3 className="text-2xl font-extrabold mb-6">Why join now?</h3>
             <ul className="space-y-6">
               {[
@@ -101,13 +101,13 @@ export default function About() {
             </ul>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Values */}
-      <section className="py-24 px-6 md:px-12 bg-off-white">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-off-white">
         <div className="max-w-7xl mx-auto text-center mb-16">
           <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">How We Operate</span>
-          <h2 className="text-4xl font-extrabold tracking-tight">Our Core Principles</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Core Principles</h2>
         </div>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
@@ -115,7 +115,7 @@ export default function About() {
             { icon: <Target className="text-blue" />, title: 'Direct Impact', desc: 'We pay institutions directly. No cash is handled by students, ensuring 100% of funds go to education.' },
             { icon: <Users className="text-blue" />, title: 'Community First', desc: 'Sduella is built on the spirit of Ubuntu. We are a community investing in its own future leaders.' },
           ].map((value, i) => (
-            <div key={i} className="bg-white p-10 rounded-sm border border-grey-100">
+            <div key={i} className="bg-white p-5 sm:p-8 lg:p-10 rounded-sm border border-grey-100">
               <div className="w-12 h-12 bg-off-white rounded-sm flex items-center justify-center mb-6">
                 {value.icon}
               </div>
@@ -124,16 +124,16 @@ export default function About() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold mb-8 italic">"Education is the most powerful weapon which you can use to change the world."</h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-8 italic">"Education is the most powerful weapon which you can use to change the world."</h2>
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/donate" className="px-10 py-4 bg-black text-white font-syne font-bold rounded-sm hover:bg-black/90 transition-all">Support the Fund</a>
             <a href="/dashboard" className="px-10 py-4 border-2 border-black text-black font-syne font-bold rounded-sm hover:bg-grey-50 transition-all">Apply for Funding</a>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>

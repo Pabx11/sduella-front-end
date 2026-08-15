@@ -1,272 +1,102 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+"use client";
+
+import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
+import { X } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import Donate from './pages/Donate';
-import Apply from './pages/Apply';
-import Dashboard from './pages/Dashboard';
-import Bursaries from './pages/Bursaries';
-import About from './pages/About';
-import Newsletter from './pages/Newsletter';
-import Contact from './pages/Contact';
-import Privacy from './pages/Privacy';
-import Impact from './pages/Impact';
-import Transparency from './pages/Transparency';
-import FundingGuide from './pages/FundingGuide';
-import Learnerships from './pages/Learnerships';
-import { MOCK_DATA } from './data/mockData';
+import { COUNTRY_GROUPS } from './lib/geography';
+import * as authApi from './lib/authApi';
+import type { SavedInterest } from './lib/authApi';
 import type { User, Role } from './types';
-import { X } from 'lucide-react';
 import { cn } from './lib/utils';
 
-const AuthModal = ({ isOpen, onClose, onLogin, redirectAfter }: { isOpen: boolean, onClose: () => void, onLogin: (user: User) => void, redirectAfter: string }) => {
-  const navigate = useNavigate();
+type RegistrationRole = Exclude<Role, 'admin'>;
+const ROLE_LABELS: Record<RegistrationRole, string> = {
+  seeker: 'Opportunity seeker', student: 'Student', founder: 'Founder', donor: 'Donor',
+};
+
+const AuthModal = ({ isOpen, onClose, onLogin, redirectAfter }: {
+  isOpen: boolean; onClose: () => void; onLogin: (user: User) => void; redirectAfter: string;
+}) => {
+  const router = useRouter();
   const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [reg, setReg] = useState({
-    role: 'student' as Role,
-    fullName: '',
-    phone: '',
-    email: '',
-    emailVerified: false,
-    otpSent: false,
-    otpInput: '',
-    idNumber: '',
-    institution: '',
-    year: '',
-    address: '',
-    password: '',
-    confirmPassword: '',
+    role: 'seeker' as RegistrationRole,
+    fullName: '', email: '', countryCode: '', city: '', institution: '',
+    password: '', confirmPassword: '',
+    studyFunding: true, businessFunding: false, jobs: false,
+    frequency: 'weekly' as 'daily' | 'weekly' | 'monthly',
+    opportunityEmailConsent: false, marketingConsent: false,
   });
-
-  const setRegField = (field: string, value: string | boolean) =>
-    setReg(prev => ({ ...prev, [field]: value }));
-
+  const setRegField = <K extends keyof typeof reg>(field: K, value: (typeof reg)[K]) =>
+    setReg(previous => ({ ...previous, [field]: value }));
   if (!isOpen) return null;
 
-  const quickLogin = (type: 'donor' | 'student') => {
-    const em = type === 'donor' ? 'thandi@email.com' : 'mpho@university.edu';
-    const user = type === 'donor' ? MOCK_DATA.donors[em as keyof typeof MOCK_DATA.donors] : MOCK_DATA.students[em as keyof typeof MOCK_DATA.students];
-    if (user) {
-      onLogin({ ...user, email: em });
-      onClose();
-      navigate(redirectAfter);
-    }
+  const finish = (user: User) => { onLogin(user); onClose(); router.push(redirectAfter); };
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault(); setBusy(true); setError(null);
+    try { finish(await authApi.login(loginEmail, loginPassword)); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Login failed.'); }
+    finally { setBusy(false); }
   };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    const donor = MOCK_DATA.donors[loginEmail as keyof typeof MOCK_DATA.donors];
-    const student = MOCK_DATA.students[loginEmail as keyof typeof MOCK_DATA.students];
-    const existingUser = donor || student;
-    if (existingUser && MOCK_DATA.passwords[loginEmail as keyof typeof MOCK_DATA.passwords] === loginPassword) {
-      onLogin({ ...existingUser, email: loginEmail });
-      onClose();
-      navigate(redirectAfter);
-    } else {
-      alert('Invalid credentials. Try the demo buttons below.');
-    }
+  const handleRegister = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (reg.password !== reg.confirmPassword) { setError('Passwords do not match.'); return; }
+    const interests: SavedInterest[] = [];
+    const common = { country_code: reg.countryCode || undefined, notification_frequency: reg.frequency };
+    if (reg.studyFunding) interests.push({ ...common, opportunity_group: 'funding', field_or_sector: 'education' });
+    if (reg.businessFunding) interests.push({ ...common, opportunity_group: 'funding', field_or_sector: 'business' });
+    if (reg.jobs) interests.push({ ...common, opportunity_group: 'jobs' });
+    setBusy(true); setError(null);
+    try {
+      finish(await authApi.register({
+        full_name: reg.fullName, email: reg.email, password: reg.password, role: reg.role,
+        country_code: reg.countryCode || undefined, city: reg.city || undefined,
+        institution: reg.institution || undefined, interests,
+        opportunity_email_consent: reg.opportunityEmailConsent,
+        marketing_consent: reg.marketingConsent,
+      }));
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Registration failed.'); }
+    finally { setBusy(false); }
   };
-
-  const canRegister = () => {
-    if (!reg.fullName.trim() || !reg.phone.trim() || !reg.email.trim() || !reg.address.trim()) return false;
-    if (!reg.password || reg.password !== reg.confirmPassword) return false;
-    if (reg.role === 'student') {
-      if (!reg.emailVerified || !reg.idNumber.trim() || !reg.institution.trim() || !reg.year) return false;
-    }
-    return true;
-  };
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canRegister()) return;
-    onLogin({
-      name: reg.fullName,
-      email: reg.email,
-      role: reg.role,
-      phone: reg.phone,
-      idNumber: reg.idNumber,
-      address: reg.address,
-      institution: reg.institution || undefined,
-      year: reg.year || undefined,
-      totalDonated: 0,
-      donations: [],
-      applications: [],
-    });
-    onClose();
-    navigate(redirectAfter);
-  };
+  const inputClass = 'w-full px-3.5 py-2.5 border border-grey-200 rounded-sm focus:border-blue outline-none text-sm';
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-[400] flex items-center justify-center p-5">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white w-full max-w-[480px] rounded-sm relative z-0 flex flex-col max-h-[92vh]"
-      >
-        <button onClick={onClose} className="absolute top-4.5 right-5 p-2 text-grey-400 hover:text-black hover:bg-grey-100 rounded-sm z-10">
-          <X size={16} />
-        </button>
-
-        <div className="p-9 pb-5 shrink-0">
-          <h2 className="text-[22px] font-extrabold mb-1 font-syne">
-            {tab === 'login' ? 'Welcome back' : 'Create an account'}
-          </h2>
-          <p className="text-sm text-grey-600">
-            {tab === 'login' ? 'Log in to access your account.' : 'Join Sduella as a donor or student.'}
-          </p>
+    <div className="fixed inset-0 bg-black/40 z-[400] flex items-end sm:items-center justify-center p-0 sm:p-5">
+      <motion.div initial={{ scale: 0.97, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-full max-w-[560px] rounded-t-sm sm:rounded-sm relative flex flex-col max-h-[96dvh] sm:max-h-[92vh]">
+        <button onClick={onClose} aria-label="Close" className="absolute top-3 right-3 p-2 z-10"><X size={18} /></button>
+        <div className="p-5 pr-14 pb-4 sm:p-8 sm:pb-5">
+          <h2 className="text-2xl font-extrabold font-syne">{tab === 'login' ? 'Welcome back' : 'Create your Sduella account'}</h2>
+          <p className="text-sm text-grey-600 mt-1">{tab === 'login' ? 'Access your saved interests and alerts.' : 'Save filters and choose which alerts you want.'}</p>
         </div>
-
-        <div className="px-9 shrink-0">
-          <div className="grid grid-cols-2 gap-0.5 bg-grey-100 p-1 rounded-sm mb-5">
-            <button onClick={() => setTab('login')} className={cn("py-2 text-[13px] font-bold rounded-sm transition-all", tab === 'login' ? "bg-white text-black shadow-sm" : "text-grey-600")}>Log In</button>
-            <button onClick={() => setTab('register')} className={cn("py-2 text-[13px] font-bold rounded-sm transition-all", tab === 'register' ? "bg-white text-black shadow-sm" : "text-grey-600")}>Register</button>
-          </div>
-        </div>
-
-        <div className="overflow-y-auto flex-1 px-9 pb-9">
+        <div className="px-5 sm:px-8"><div className="grid grid-cols-2 bg-grey-100 p-1 mb-5">{(['login', 'register'] as const).map(value => <button key={value} type="button" onClick={() => { setTab(value); setError(null); }} className={cn('py-2 text-sm font-bold capitalize', tab === value && 'bg-white shadow-sm')}>{value}</button>)}</div></div>
+        <div className="overflow-y-auto px-5 pb-6 sm:px-8 sm:pb-8">
+          {error && <div role="alert" className="mb-4 border border-red/30 bg-red/5 p-3 text-sm text-red">{error}</div>}
           {tab === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Email address</label>
-                <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors" placeholder="your@email.com" required />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Password</label>
-                <input type="password" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors" placeholder="Your password" required />
-              </div>
-              <button type="submit" className="w-full py-3 bg-black text-white font-syne font-bold text-sm tracking-wide rounded-sm hover:bg-black/90 transition-colors">Log In</button>
-              <div className="flex items-center gap-3 my-4">
-                <div className="flex-1 h-px bg-grey-200" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-grey-400">or continue as</span>
-                <div className="flex-1 h-px bg-grey-200" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => quickLogin('donor')} className="py-2.5 border-1.5 border-grey-200 text-[11px] font-bold uppercase tracking-widest rounded-sm hover:bg-grey-50 transition-colors">Donor Demo</button>
-                <button type="button" onClick={() => quickLogin('student')} className="py-2.5 border-1.5 border-grey-200 text-[11px] font-bold uppercase tracking-widest rounded-sm hover:bg-grey-50 transition-colors">Student Demo</button>
-              </div>
+              <label className="block text-xs font-bold uppercase tracking-wider">Email<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} type="email" value={loginEmail} onChange={event => setLoginEmail(event.target.value)} required /></label>
+              <label className="block text-xs font-bold uppercase tracking-wider">Password<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} type="password" value={loginPassword} onChange={event => setLoginPassword(event.target.value)} required /></label>
+              <button disabled={busy} className="w-full py-3 bg-black text-white font-syne font-bold disabled:opacity-50">{busy ? 'Signing in…' : 'Log in'}</button>
             </form>
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">I am a</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(['student', 'donor'] as Role[]).map(r => (
-                    <button key={r} type="button" onClick={() => setRegField('role', r)}
-                      className={cn("py-2.5 text-[12px] font-bold capitalize border-1.5 rounded-sm transition-all",
-                        reg.role === r ? "border-blue bg-blue/5 text-blue" : "border-grey-200 text-grey-600 hover:bg-grey-50")}>
-                      {r.charAt(0).toUpperCase() + r.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Full Name</label>
-                  <input type="text" value={reg.fullName} onChange={e => setRegField('fullName', e.target.value)} className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm" placeholder="First and last name" required />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Phone</label>
-                  <input type="tel" value={reg.phone} onChange={e => setRegField('phone', e.target.value)} className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm" placeholder="+27 000 000 0000" required />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">
-                  {reg.role === 'student' ? 'Student Email Address' : 'Email Address'}
-                  {reg.emailVerified && <span className="ml-2 text-green text-[10px] normal-case font-semibold tracking-normal">✓ Verified</span>}
-                </label>
-                <div className="flex gap-2">
-                  <input type="email" value={reg.email} onChange={e => { setRegField('email', e.target.value); setRegField('emailVerified', false); setRegField('otpSent', false); }}
-                    className={cn("flex-1 px-3.5 py-2.5 border-1.5 rounded-sm outline-none transition-colors text-sm",
-                      reg.emailVerified ? "border-green bg-green/5" : "border-grey-200 focus:border-blue")}
-                    placeholder={reg.role === 'student' ? 'student@university.ac.za' : 'your@email.com'} required />
-                  {reg.role === 'student' && !reg.emailVerified && (
-                    <button type="button" onClick={() => setRegField('otpSent', true)} disabled={!reg.email.includes('@')}
-                      className="px-3.5 py-2 bg-black text-white text-[11px] font-bold uppercase tracking-wider rounded-sm disabled:opacity-40 whitespace-nowrap">
-                      {reg.otpSent ? 'Resend' : 'Send OTP'}
-                    </button>
-                  )}
-                </div>
-                {reg.role === 'student' && reg.otpSent && !reg.emailVerified && (
-                  <div className="flex gap-2 mt-2">
-                    <input type="text" value={reg.otpInput} onChange={e => setRegField('otpInput', e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      className="flex-1 px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm tracking-widest font-mono"
-                      placeholder="6-digit code" maxLength={6} />
-                    <button type="button" onClick={() => { if (reg.otpInput.length === 6) setRegField('emailVerified', true); }} disabled={reg.otpInput.length !== 6}
-                      className="px-3.5 py-2 bg-blue text-white text-[11px] font-bold uppercase tracking-wider rounded-sm disabled:opacity-40">
-                      Verify
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {reg.role === 'student' && (
-                <>
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold tracking-widests uppercase text-grey-600">SA ID Number</label>
-                    <input type="text" value={reg.idNumber} onChange={e => setRegField('idNumber', e.target.value.replace(/\D/g, '').slice(0, 13))}
-                      className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm font-mono tracking-widest"
-                      placeholder="13-digit SA ID" maxLength={13} required />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Institution</label>
-                      <input type="text" value={reg.institution} onChange={e => setRegField('institution', e.target.value)}
-                        className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm"
-                        placeholder="University / TVET" required />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Year of Study</label>
-                      <select value={reg.year} onChange={e => setRegField('year', e.target.value)}
-                        className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors appearance-none bg-white text-sm" required>
-                        <option value="">Select year</option>
-                        {['1st Year', '2nd Year', '3rd Year', '4th Year', 'Honours', 'Masters', 'PhD'].map(y => (
-                          <option key={y} value={y}>{y}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Home Address</label>
-                <input type="text" value={reg.address} onChange={e => setRegField('address', e.target.value)}
-                  className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm"
-                  placeholder="Street, City, Province" required />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Password</label>
-                  <input type="password" value={reg.password} onChange={e => setRegField('password', e.target.value)}
-                    className="w-full px-3.5 py-2.5 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none transition-colors text-sm"
-                    placeholder="Create password" required />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold tracking-widest uppercase text-grey-600">Confirm</label>
-                  <input type="password" value={reg.confirmPassword} onChange={e => setRegField('confirmPassword', e.target.value)}
-                    className={cn("w-full px-3.5 py-2.5 border-1.5 rounded-sm outline-none transition-colors text-sm",
-                      reg.confirmPassword && reg.password !== reg.confirmPassword ? "border-red" : "border-grey-200 focus:border-blue")}
-                    placeholder="Repeat password" required />
-                </div>
-              </div>
-              {reg.confirmPassword && reg.password !== reg.confirmPassword && (
-                <p className="text-[11px] text-red -mt-2">Passwords do not match</p>
-              )}
-
-              <button type="submit" disabled={!canRegister()}
-                className="w-full py-3 bg-black text-white font-syne font-bold text-sm tracking-wide rounded-sm hover:bg-black/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2">
-                Create Account
-              </button>
-              {reg.role === 'student' && !reg.emailVerified && (
-                <p className="text-[11px] text-grey-500 text-center">Verify your student email to complete registration</p>
-              )}
+              <div><span className="block text-xs font-bold uppercase tracking-wider mb-2">I am a</span><div className="grid grid-cols-2 sm:grid-cols-4 gap-2">{(Object.keys(ROLE_LABELS) as RegistrationRole[]).map(role => <button key={role} type="button" onClick={() => setRegField('role', role)} className={cn('border px-2 py-2 text-xs font-bold', reg.role === role ? 'border-blue bg-blue/5 text-blue' : 'border-grey-200')}>{ROLE_LABELS[role]}</button>)}</div></div>
+              <div className="grid sm:grid-cols-2 gap-3"><label className="text-xs font-bold uppercase tracking-wider">Full name<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} value={reg.fullName} onChange={event => setRegField('fullName', event.target.value)} required /></label><label className="text-xs font-bold uppercase tracking-wider">Email<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} type="email" value={reg.email} onChange={event => setRegField('email', event.target.value)} required /></label></div>
+              <div className="grid sm:grid-cols-2 gap-3"><label className="text-xs font-bold uppercase tracking-wider">Country<select className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal bg-white`} value={reg.countryCode} onChange={event => setRegField('countryCode', event.target.value)}><option value="">Choose country</option>{COUNTRY_GROUPS.map(group => <optgroup key={group.region} label={group.region}>{group.countries.map(country => <option key={country.code} value={country.code.toUpperCase()}>{country.name}</option>)}</optgroup>)}</select></label><label className="text-xs font-bold uppercase tracking-wider">City / region<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} value={reg.city} onChange={event => setRegField('city', event.target.value)} /></label></div>
+              {reg.role === 'student' && <label className="block text-xs font-bold uppercase tracking-wider">Institution<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} value={reg.institution} onChange={event => setRegField('institution', event.target.value)} /></label>}
+              <fieldset><legend className="text-xs font-bold uppercase tracking-wider mb-2">What interests you?</legend><div className="grid sm:grid-cols-3 gap-2">{([['studyFunding', 'Study funding'], ['businessFunding', 'Business funding'], ['jobs', 'Jobs']] as const).map(([key, label]) => <label key={key} className="border border-grey-200 p-3 text-sm flex gap-2 items-center"><input type="checkbox" checked={reg[key]} onChange={event => setRegField(key, event.target.checked)} />{label}</label>)}</div></fieldset>
+              <label className="block text-xs font-bold uppercase tracking-wider">Alert frequency<select className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal bg-white`} value={reg.frequency} onChange={event => setRegField('frequency', event.target.value as typeof reg.frequency)}><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></label>
+              <div className="grid sm:grid-cols-2 gap-3"><label className="text-xs font-bold uppercase tracking-wider">Password<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} type="password" minLength={12} value={reg.password} onChange={event => setRegField('password', event.target.value)} required /></label><label className="text-xs font-bold uppercase tracking-wider">Confirm password<input className={`${inputClass} mt-1.5 normal-case font-normal tracking-normal`} type="password" minLength={12} value={reg.confirmPassword} onChange={event => setRegField('confirmPassword', event.target.value)} required /></label></div>
+              <p className="text-xs text-grey-500">Use at least 12 characters. A national ID is not required to create a basic account.</p>
+              <label className="flex gap-3 items-start text-sm"><input className="mt-1" type="checkbox" checked={reg.opportunityEmailConsent} onChange={event => setRegField('opportunityEmailConsent', event.target.checked)} /><span>Email me new opportunities matching my saved interests. You can turn this off at any time.</span></label>
+              <label className="flex gap-3 items-start text-sm"><input className="mt-1" type="checkbox" checked={reg.marketingConsent} onChange={event => setRegField('marketingConsent', event.target.checked)} /><span>Send me Sduella news and marketing. This is optional and separate from opportunity alerts.</span></label>
+              <button disabled={busy || reg.password.length < 12 || reg.password !== reg.confirmPassword} className="w-full py-3 bg-black text-white font-syne font-bold disabled:opacity-50">{busy ? 'Creating account…' : 'Create account'}</button>
             </form>
           )}
         </div>
@@ -275,63 +105,18 @@ const AuthModal = ({ isOpen, onClose, onLogin, redirectAfter }: { isOpen: boolea
   );
 };
 
-export default function App() {
+interface AppContextValue { user: User | null; openAuth: (redirectTo?: string) => void; updateUser: (user: User) => void; logout: () => void; }
+const AppContext = createContext<AppContextValue | null>(null);
+export function useAppContext() { const context = useContext(AppContext); if (!context) throw new Error('useAppContext must be used inside the Sduella app shell.'); return context; }
+
+export default function App({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authRedirect, setAuthRedirect] = useState('/dashboard');
-
-  const openAuth = (redirectTo = '/dashboard') => {
-    setAuthRedirect(redirectTo);
-    setIsAuthOpen(true);
-  };
-  const handleUpdateUser = (updatedUser: User) => {
-    setUser(updatedUser);
-    if (updatedUser.role === 'donor') {
-      MOCK_DATA.donors[updatedUser.email as keyof typeof MOCK_DATA.donors] = updatedUser as any;
-    } else {
-      MOCK_DATA.students[updatedUser.email as keyof typeof MOCK_DATA.students] = updatedUser as any;
-    }
-  };
-
-  const handleDonate = (_amount: number) => {};
-
-  return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
-        <Navbar
-          user={user}
-          onOpenAuth={() => openAuth('/dashboard')}
-          onLogout={() => setUser(null)}
-        />
-
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home user={user} onOpenAuth={openAuth} />} />
-            <Route path="/bursaries" element={<Bursaries user={user} onOpenAuth={openAuth} />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/donate" element={<Donate user={user} onDonate={handleDonate} onUpdateUser={handleUpdateUser} />} />
-            <Route path="/apply" element={<Apply user={user} onOpenAuth={() => openAuth('/apply')} onUpdateUser={handleUpdateUser} />} />
-            <Route path="/dashboard" element={<Dashboard user={user} onLogout={() => setUser(null)} onUpdateUser={handleUpdateUser} />} />
-            <Route path="/newsletter" element={<Newsletter />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/impact" element={<Impact />} />
-            <Route path="/transparency" element={<Transparency />} />
-            <Route path="/funding-guide" element={<FundingGuide />} />
-            <Route path="/learnerships" element={<Learnerships />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-
-        <Footer />
-
-        <AuthModal
-          isOpen={isAuthOpen}
-          onClose={() => setIsAuthOpen(false)}
-          onLogin={setUser}
-          redirectAfter={authRedirect}
-        />
-      </div>
-    </Router>
-  );
+  useEffect(() => { authApi.restoreSession().then(setUser); }, []);
+  const openAuth = (redirectTo = '/dashboard') => { setAuthRedirect(redirectTo); setIsAuthOpen(true); };
+  const handleUpdateUser = (updated: User) => { setUser(updated); authApi.updateProfile(updated).then(setUser).catch(() => undefined); };
+  const handleLogout = () => { setUser(null); void authApi.logout(); };
+  const value = useMemo<AppContextValue>(() => ({ user, openAuth, updateUser: handleUpdateUser, logout: handleLogout }), [user]);
+  return <AppContext.Provider value={value}><div className="min-h-screen flex flex-col"><Navbar user={user} onOpenAuth={() => openAuth('/dashboard')} onLogout={handleLogout} /><main className="flex-1">{children}</main><Footer /><AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLogin={setUser} redirectAfter={authRedirect} /></div></AppContext.Provider>;
 }

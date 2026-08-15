@@ -24,8 +24,8 @@ export default function Contact() {
       </section>
 
       {/* Content */}
-      <section className="py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-20">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-12 lg:gap-20">
           {/* Form */}
           <div>
             <h2 className="text-2xl font-extrabold mb-8">Send a message</h2>
@@ -84,7 +84,7 @@ export default function Contact() {
 
                 <button
                   type="submit" disabled={!canSend}
-                  className="px-10 py-4 bg-black text-white font-syne font-bold text-sm rounded-sm hover:bg-black/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-10 py-4 bg-black text-white font-syne font-bold text-sm rounded-sm hover:bg-black/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Send Message
                 </button>
@@ -92,7 +92,7 @@ export default function Contact() {
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="p-10 bg-green/5 border border-green/20 rounded-sm text-center"
+                className="p-5 sm:p-10 bg-green/5 border border-green/20 rounded-sm text-center"
               >
                 <CheckCircle2 className="w-12 h-12 text-green mx-auto mb-4" />
                 <h3 className="text-xl font-extrabold mb-2">Message received.</h3>
@@ -103,7 +103,7 @@ export default function Contact() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="bg-off-white p-8 rounded-sm border border-grey-200">
+            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
               <h3 className="font-extrabold mb-6">Direct Contact</h3>
               <div className="space-y-5">
                 {[
@@ -120,7 +120,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-black text-white p-8 rounded-sm">
+            <div className="bg-black text-white p-5 sm:p-8 rounded-sm">
               <h3 className="font-extrabold mb-4">For Partnerships</h3>
               <p className="text-sm text-white/60 leading-relaxed mb-6">
                 Are you a company looking to create an education CSI fund or list a bursary on our platform? Let's build something meaningful together.
@@ -131,7 +131,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-off-white p-8 rounded-sm border border-grey-200">
+            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
               <h3 className="font-extrabold mb-4">Follow our journey</h3>
               <div className="flex flex-wrap gap-2">
                 {['LinkedIn', 'Instagram', 'X (Twitter)'].map(s => (

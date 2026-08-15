@@ -1,4 +1,9 @@
- 
+import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
+import { CheckCircle2 } from 'lucide-react';
+import type { User } from '../types';
+import { cn } from '../lib/utils';
+
 export default function Donate({ user, onDonate, onUpdateUser }: {
   user: User | null;
   onDonate: (amount: number) => void;
@@ -64,7 +69,7 @@ export default function Donate({ user, onDonate, onUpdateUser }: {
         <p className="text-grey-600 max-w-md mb-8">
           Your donation of R {(parseInt(amount) || 0).toLocaleString()} has been added to the foundational pool.
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <a href="/" className="px-8 py-4 border-1.5 border-black text-black font-syne font-bold text-sm tracking-wide rounded-sm">Back to Home</a>
           {user && <a href="/dashboard" className="px-8 py-4 bg-black text-white font-syne font-bold text-sm tracking-wide rounded-sm">View Dashboard</a>}
         </div>
@@ -84,8 +89,8 @@ export default function Donate({ user, onDonate, onUpdateUser }: {
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           <div>
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Why It Matters</span>
             <h2 className="text-3xl font-extrabold mb-6">Your contribution is different here.</h2>
@@ -108,11 +113,11 @@ export default function Donate({ user, onDonate, onUpdateUser }: {
             </div>
           </div>
 
-          <div className="border-1.5 border-grey-200 p-10 rounded-sm">
+          <div className="border-1.5 border-grey-200 p-4 sm:p-7 lg:p-10 rounded-sm min-w-0">
             {step === 1 ? (
               <>
                 <h3 className="text-xl font-extrabold mb-8">Make a Contribution</h3>
-                <div className="grid grid-cols-3 gap-2 mb-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
                   {amounts.map(a => (
                     <button
                       key={a}
@@ -220,7 +225,7 @@ export default function Donate({ user, onDonate, onUpdateUser }: {
                     <label className="text-[10px] font-bold tracking-widest uppercase text-grey-400">Card Number</label>
                     <input type="text" value={paymentData.cardNumber} onChange={(e) => setPaymentData({...paymentData, cardNumber: e.target.value.replace(/[^0-9]/g, '').slice(0, 16)})} placeholder="0000 0000 0000 0000" className="w-full px-4 py-3 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none" />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold tracking-widest uppercase text-grey-400">Expiry</label>
                       <input type="text" value={paymentData.expiry} onChange={(e) => setPaymentData({...paymentData, expiry: e.target.value})} placeholder="MM/YY" className="w-full px-4 py-3 border-1.5 border-grey-200 rounded-sm focus:border-blue outline-none" />
@@ -231,7 +236,7 @@ export default function Donate({ user, onDonate, onUpdateUser }: {
                     </div>
                   </div>
                 </div>
-                <div className="pt-4 flex gap-3">
+                <div className="pt-4 flex flex-col sm:flex-row gap-3">
                   <button onClick={() => setStep(1)} className="flex-1 py-4 border-1.5 border-grey-200 font-syne font-bold text-sm tracking-wide rounded-sm">Back</button>
                   <button onClick={handleDonateSubmit} disabled={!paymentData.cardNumber || !paymentData.name} className="flex-[2] py-4 bg-blue text-white font-syne font-bold text-sm tracking-wide rounded-sm hover:bg-blue-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                     Pay R {(parseInt(amount) || 0).toLocaleString()}

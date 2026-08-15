@@ -37,18 +37,18 @@ export default function FundingGuide() {
       {/* Type sections */}
       <div className="divide-y divide-grey-100">
         {FUNDING_TYPES.map((type, i) => (
-          <section key={type.id} id={type.id} className={cn("py-20 px-6 md:px-12 scroll-mt-[120px]", i % 2 === 1 && "bg-off-white")}>
+          <section key={type.id} id={type.id} className={cn("py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-12 scroll-mt-[120px]", i % 2 === 1 && "bg-off-white")}>
             <div className="max-w-7xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-10 lg:gap-16 items-start">
                 <div>
-                  <div className="flex items-center gap-3 mb-6">
+                  <div className="flex flex-wrap items-center gap-3 mb-6">
                     <span className={cn("text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-sm", type.color)}>
                       {type.label}
                     </span>
                     <span className="text-[10px] font-bold tracking-widest uppercase text-grey-400">{type.tag}</span>
                   </div>
 
-                  <h2 className="text-4xl font-extrabold tracking-tight mb-5">{type.headline}</h2>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5">{type.headline}</h2>
                   <p className="text-grey-600 leading-relaxed text-lg mb-10">{type.summary}</p>
 
                   {/* How it works */}
@@ -121,7 +121,7 @@ export default function FundingGuide() {
       </div>
 
       {/* CTA */}
-      <section className="py-20 px-6 md:px-12 bg-black text-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-12 bg-black text-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold mb-4">Not sure which to apply for?</h2>
           <p className="text-white/60 mb-8 leading-relaxed">Browse all funding types in one place — filtered by type, field, and deadline.</p>

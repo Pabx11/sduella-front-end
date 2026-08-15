@@ -92,9 +92,9 @@ export default function Impact() {
 
       {/* Stats */}
       <section className="bg-off-white border-b border-grey-200">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {STATS.map((s, i) => (
-            <div key={i} className="p-10 md:p-14 border-r border-grey-200 last:border-r-0 border-b md:border-b-0">
+            <div key={i} className="p-6 sm:p-8 md:p-14 border-b border-grey-200 sm:border-r sm:nth-[2n]:border-r-0 md:border-b-0 md:nth-[2n]:border-r md:last:border-r-0">
               <div className="text-[10px] font-bold tracking-widest uppercase text-grey-400 mb-3">{s.label}</div>
               <div className="text-3xl md:text-4xl font-extrabold font-syne mb-1">{s.value}</div>
               <div className="text-xs text-grey-500">{s.sub}</div>
@@ -104,11 +104,11 @@ export default function Impact() {
       </section>
 
       {/* Milestones */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Roadmap</span>
-            <h2 className="text-4xl font-extrabold tracking-tight">Our Journey</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Journey</h2>
           </div>
           <div className="relative max-w-3xl">
             <div className="absolute left-[11px] top-0 bottom-0 w-px bg-grey-200" />
@@ -120,7 +120,7 @@ export default function Impact() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
-                  className="flex gap-8 items-start"
+                  className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start"
                 >
                   <div className={cn(
                     "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-1 relative z-10",
@@ -151,11 +151,11 @@ export default function Impact() {
       </section>
 
       {/* Student voices */}
-      <section className="py-24 px-6 md:px-12 bg-off-white border-y border-grey-200">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-off-white border-y border-grey-200">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Student Voices</span>
-            <h2 className="text-4xl font-extrabold tracking-tight">The faces behind the fund.</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">The faces behind the fund.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {STORIES.map((s, i) => (
@@ -165,7 +165,7 @@ export default function Impact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white p-10 rounded-sm border border-grey-100 flex flex-col"
+                className="bg-white p-5 sm:p-8 lg:p-10 rounded-sm border border-grey-100 flex flex-col"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <StudentAvatar name={s.name} image={s.image} size="lg" />
@@ -188,17 +188,17 @@ export default function Impact() {
       </section>
 
       {/* Reports */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Documentation</span>
-            <h2 className="text-4xl font-extrabold tracking-tight">Impact Reports</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Impact Reports</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
             {REPORTS.map((r, i) => (
               <div
                 key={i}
-                className="bg-white p-8 rounded-sm border border-grey-200 flex items-start justify-between group hover:border-blue transition-all cursor-pointer"
+                className="bg-white p-5 sm:p-8 rounded-sm border border-grey-200 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 group hover:border-blue transition-all cursor-pointer"
               >
                 <div>
                   {r.isLatest && (
@@ -220,9 +220,9 @@ export default function Impact() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 md:px-12 bg-black text-white">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-black text-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold mb-6 tracking-tight">Be part of the next chapter.</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 tracking-tight">Be part of the next chapter.</h2>
           <p className="text-white/60 mb-10 leading-relaxed">
             Whether you donate R100 or R100,000, you are directly extending a student's runway to graduation.
           </p>

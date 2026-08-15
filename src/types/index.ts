@@ -1,4 +1,4 @@
-export type Role = 'donor' | 'student' | 'admin';
+export type Role = 'seeker' | 'student' | 'founder' | 'donor' | 'admin';
 export type Gender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
 export type DonorType = 'individual' | 'company';
 
@@ -11,6 +11,7 @@ export interface CompanyProfile {
 }
 
 export interface User {
+  id?: string;
   name: string;
   email: string;
   role: Role;
@@ -20,6 +21,11 @@ export interface User {
   address?: string;
   institution?: string;
   year?: string;
+  countryCode?: string;
+  city?: string;
+  emailVerified?: boolean;
+  interests?: unknown[];
+  consents?: Record<string, boolean>;
   avatarUrl?: string;
   // donor-specific
   donorType?: DonorType;
