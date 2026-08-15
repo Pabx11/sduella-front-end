@@ -270,7 +270,7 @@ export default function Bursaries({
         const message = (
           fetchError instanceof Error && fetchError.message.startsWith('The ')
             ? fetchError.message
-            : 'Live funding is temporarily unavailable. Please try again.'
+            : 'Funding is temporarily unavailable. Please try again.'
         );
         if (page === 1) {
           setFunding([]);
@@ -385,7 +385,7 @@ export default function Bursaries({
         <div className="max-w-5xl min-[1650px]:max-w-7xl mx-auto relative" aria-busy={loading}>
           <AdSenseWideRails />
           <div className="mb-10 sm:mb-16 text-center">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">{mode === 'business' ? 'Live Business Funding' : 'Live Study Funding'}</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">{mode === 'business' ? 'Business Funding' : 'Study Funding'}</h2>
             <p className="text-sm sm:text-base text-grey-600 max-w-2xl mx-auto mb-8 sm:mb-12">Every opportunity links back to its official provider.</p>
 
             <div className="flex flex-col gap-4 max-w-4xl mx-auto">
@@ -497,7 +497,7 @@ export default function Bursaries({
           {error ? (
             <div className="text-center py-20 bg-red/5 border border-dashed border-red/30 rounded-sm">
               <ServerOff className="mx-auto mb-4 text-red" size={28} />
-              <p className="font-bold mb-2">Unable to load live funding</p>
+              <p className="font-bold mb-2">Unable to funding</p>
               <p className="text-sm text-grey-600 mb-6">{error}</p>
               <button type="button" onClick={() => setRetryKey(value => value + 1)} className="inline-flex items-center gap-2 px-5 py-3 bg-black text-white text-xs font-bold uppercase tracking-wider rounded-sm"><RefreshCw size={14} /> Retry</button>
             </div>
@@ -591,7 +591,7 @@ export default function Bursaries({
             </>
           ) : (
             <div className="text-center py-20 bg-white border border-dashed border-grey-300 rounded-sm">
-              <p className="text-grey-500 font-syne italic">No live funding matched these filters.</p>
+              <p className="text-grey-500 font-syne italic">No available funding matched these filters.</p>
             </div>
           )}
 
