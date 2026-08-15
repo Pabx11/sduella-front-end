@@ -464,11 +464,11 @@ export default function Bursaries({
             </div>
           </div>
 
-          {sourceErrors.length > 0 && !error && (
+          {/* {sourceErrors.length > 0 && !error && (
             <div className="mb-8 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 rounded-sm">
               Some funding providers did not respond, so these results may be incomplete: {sourceErrors.map(item => SOURCE_LABELS[item.source] || item.source).join(', ')}.
             </div>
-          )}
+          )} */}
 
           {cachedResults > 0 && !error && (
             <div className="mb-8 border border-blue/20 bg-blue/5 p-4 text-sm text-grey-700 rounded-sm">
