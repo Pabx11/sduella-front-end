@@ -7,7 +7,7 @@ export default function Transparency() {
   return (
     <div className="pt-[62px]">
       {/* Hero */}
-      <section className="bg-black text-white py-24 px-6 md:px-12 relative overflow-hidden">
+      {/* <section className="bg-black text-white py-24 px-6 md:px-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">How We Operate</span>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter mb-6 leading-[0.9]">
@@ -18,10 +18,10 @@ export default function Transparency() {
           </p>
         </div>
         <ShieldCheck className="absolute -right-20 -bottom-16 w-96 h-96 text-white/5" />
-      </section>
+      </section> */}
 
       {/* Fund Allocation */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           <div>
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Fund Allocation</span>
@@ -64,10 +64,10 @@ export default function Transparency() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Committee */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-off-white border-y border-grey-200">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12 bg-off-white border-y border-grey-200">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Governance</span>
@@ -99,12 +99,12 @@ export default function Transparency() {
                 <div className="text-xs text-grey-500">{m.org}</div>
               </motion.div>
             ))}
-          </div>
+          </div> 
         </div>
-      </section>
+      </section>*/}
 
       {/* Audits */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
+      {/* <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Audits</span>
@@ -138,10 +138,10 @@ export default function Transparency() {
             Full audit reports available on request: audit@sduella.org
           </p>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-12 bg-black text-white">
+      {/* <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-12 bg-black text-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold mb-4">Questions about our governance?</h2>
           <p className="text-white/60 mb-8">
@@ -154,7 +154,7 @@ export default function Transparency() {
             Contact the Committee <ArrowRight size={16} />
           </a>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
