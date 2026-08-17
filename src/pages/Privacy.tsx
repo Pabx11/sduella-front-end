@@ -25,7 +25,6 @@ You can browse many opportunities on Sduella without providing sensitive persona
 • Send newsletters or opportunity updates where you have subscribed
 • Understand how visitors use Sduella and improve our services
 • Protect the platform against misuse, fraud and security threats
-• Comply with applicable South African law, including POPIA
 
 We do not sell your personal information to third parties.`,
   },
@@ -49,21 +48,21 @@ We retain personal information only for as long as it is reasonably necessary fo
 
 You may request deletion of personal information that we are not legally required to retain.`,
   },
-  {
-    title: "5. Your Rights (POPIA)",
-    body: `Under the Protection of Personal Information Act (POPIA), you may have the right to:
+//   {
+//     title: "5. Your Rights (POPIA)",
+//     body: `Under the Protection of Personal Information Act (POPIA), you may have the right to:
 
-• Access the personal information we hold about you
-• Request correction of inaccurate or outdated information
-• Request deletion of personal information where legally permitted
-• Object to certain processing of your personal information
-• Withdraw consent where processing is based on consent
-• Lodge a complaint with the Information Regulator of South Africa
+// • Access the personal information we hold about you
+// • Request correction of inaccurate or outdated information
+// • Request deletion of personal information where legally permitted
+// • Object to certain processing of your personal information
+// • Withdraw consent where processing is based on consent
+// • Lodge a complaint with the Information Regulator of South Africa
 
-To exercise these rights, contact us at privacy@sduella.org.`,
-  },
+// To exercise these rights, contact us at privacy@sduella.org.`,
+//   },
   {
-    title: "6. Cookies & Advertising",
+    title: "5. Cookies & Advertising",
     body: `Sduella uses cookies and similar technologies to operate the platform, remember preferences, understand usage and improve performance.
 
 Where advertising is displayed on Sduella, third-party advertising providers, including Google, may use cookies or similar technologies to serve and measure advertisements.
@@ -71,7 +70,7 @@ Where advertising is displayed on Sduella, third-party advertising providers, in
 You can manage or disable cookies through your browser settings. Disabling certain cookies may affect some platform features.`,
   },
   {
-    title: "7. Third-Party Services & Links",
+    title: "6. Third-Party Services & Links",
     body: `Sduella may use trusted third-party providers for services such as hosting, analytics, email delivery, authentication and advertising.
 
 We may also link to websites operated by employers, educational institutions, government organisations, funding providers and other opportunity providers.
@@ -79,7 +78,7 @@ We may also link to websites operated by employers, educational institutions, go
 Sduella does not control how external websites collect or process your personal information. We encourage you to review the privacy policy and terms of any third-party website before submitting personal information.`,
   },
   {
-    title: "8. Changes to This Policy",
+    title: "7. Changes to This Policy",
     body: `We may update this policy as Sduella develops, introduces new features or changes the services used to operate the platform.
 
 When changes are made, the updated policy will be published on this page together with a revised "Last updated" date.`,

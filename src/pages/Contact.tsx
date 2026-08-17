@@ -16,9 +16,9 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto relative z-10">
           <span className="font-syne text-[11px] font-bold tracking-widest uppercase text-blue block mb-4">Get in Touch</span>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-6 leading-[0.9]">Contact Us</h1>
-          <p className="text-xl text-white/60 max-w-2xl leading-relaxed">
+          {/* <p className="text-xl text-white/60 max-w-2xl leading-relaxed">
             Have a question, partnership inquiry, or just want to say hello? We read every message.
-          </p>
+          </p> */}
         </div>
         <Mail className="absolute -right-16 -bottom-16 w-80 h-80 text-white/5" />
       </section>
@@ -96,7 +96,7 @@ export default function Contact() {
               >
                 <CheckCircle2 className="w-12 h-12 text-green mx-auto mb-4" />
                 <h3 className="text-xl font-extrabold mb-2">Message received.</h3>
-                <p className="text-grey-600 text-sm">We typically respond within 2–3 business days.</p>
+                <p className="text-grey-600 text-sm">We typically respond within 3 business days.</p>
               </motion.div>
             )}
           </div>
@@ -104,13 +104,13 @@ export default function Contact() {
           {/* Sidebar */}
           <div className="space-y-6">
             <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
-              <h3 className="font-extrabold mb-6">Direct Contact</h3>
+              {/* <h3 className="font-extrabold mb-6">Direct Contact</h3> */}
               <div className="space-y-5">
                 {[
-                  { label: 'Email', value: 'hello@sduella.org' },
-                  { label: 'Response Time', value: '2–3 business days' },
-                  { label: 'Registered Office', value: 'Johannesburg, South Africa' },
-                  { label: 'NPO Reference', value: 'Reg. 2024/NPO/01823' },
+                  { label: 'Email', value: 'hello@sduella.com' },
+                  { label: 'Response Time', value: 'up to 3 business days' },
+                  // { label: 'Registered Office', value: 'Johannesburg, South Africa' },
+                  // { label: 'NPO Reference', value: 'Reg. 2024/NPO/01823' },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex flex-col gap-0.5">
                     <span className="text-[10px] font-bold tracking-widest uppercase text-grey-400">{label}</span>
@@ -120,7 +120,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-black text-white p-5 sm:p-8 rounded-sm">
+            {/* <div className="bg-black text-white p-5 sm:p-8 rounded-sm">
               <h3 className="font-extrabold mb-4">For Partnerships</h3>
               <p className="text-sm text-white/60 leading-relaxed mb-6">
                 Are you a company looking to create an education CSI fund or list a bursary on our platform? Let's build something meaningful together.
@@ -129,9 +129,9 @@ export default function Contact() {
                 <span className="text-[10px] font-bold tracking-widest uppercase text-blue">Partnership Email</span>
                 <span className="text-sm font-semibold">partners@sduella.org</span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
+            {/* <div className="bg-off-white p-5 sm:p-8 rounded-sm border border-grey-200">
               <h3 className="font-extrabold mb-4">Follow our journey</h3>
               <div className="flex flex-wrap gap-2">
                 {['LinkedIn', 'Instagram', 'X (Twitter)'].map(s => (
@@ -142,7 +142,7 @@ export default function Contact() {
                   </a>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
