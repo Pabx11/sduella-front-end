@@ -63,7 +63,6 @@ export default function Contact() {
                     <option value="">Select a subject</option>
                     {[
                       'Student Application Enquiry',
-                      'Donor / Partnership',
                       'Technical Support',
                       'Media & Press',
                       'General Enquiry',
